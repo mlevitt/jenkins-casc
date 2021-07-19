@@ -1,0 +1,86 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+  remotingSecurity:
+    enabled: true
+  labelAtoms:
+  - name: "foo"
+  - name: "labelbar,"
+  - name: "labelbaz"
+  - name: "master"
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  nodes:
+  - permanent:
+      labelString: "labelbar, labelbaz"
+      launcher:
+        ssh:
+          credentialsId: "userWithPrivateKey"
+          host: "foodns"
+          port: 22
+          sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+      name: "foo"
+      nodeDescription: "foo's description"
+      numExecutors: 42
+      remoteFS: "/tmp/foo"
+      retentionStrategy:
+        demand:
+          idleDelay: 10
+          inDemandDelay: 10
+security:
+  queueItemAuthenticator:
+    authenticators:
+    - global:
+        strategy: triggeringUsersAuthorizationStrategy
+unclassified:
+  location:
+    url: http://localhost:8080/
+  artifactoryBuilder:
+    artifactoryServers:
+    - artifactoryUrl: "http://artifactory.csw"
+      bypassProxy: false
+      connectionRetry: 3
+      deployerCredentialsConfig:
+        overridingCredentials: false
+        password: "{AQAAABAAAAAQnA/a04oFT3c3Zvx32bn9ypDhrJ+7B4F0ilG+OWvtQqU=}"
+        username: "jenkins-ci"
+      deploymentThreads: 3
+      serverId: "cswartifactory"
+      timeout: 300
+  bitbucketEndpointConfiguration:
+    endpoints:
+    - bitbucketServerEndpoint:
+        displayName: "BBServer"
+        manageHooks: false
+        serverUrl: "http://bitbucket.csw"
+  email-ext:
+    adminRequiredForTemplateTesting: false
+    allowUnregisteredEnabled: false
+    charset: "UTF-8"
+    debugMode: false
+    defaultBody: |-
+      $PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+
+      Check console output at $BUILD_URL to view the results.
+    defaultContentType: "text/plain"
+    defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
+    defaultSuffix: "@csw.l-3com.com"
+    defaultTriggerIds:
+    - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
+    mailAccount:
+      smtpHost: "nemesis"
+      smtpPassword: ""
+    maxAttachmentSize: -1
+    maxAttachmentSizeMb: -1
+    precedenceBulk: false
+    watchingEnabled: false
