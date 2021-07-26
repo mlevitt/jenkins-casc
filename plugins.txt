@@ -47,6 +47,8 @@ credentials-binding
 credentials
 display-url-api
 docker-commons
+docker-plugin
+docker-swarm
 docker-workflow
 durable-task
 echarts-api
@@ -84,6 +86,7 @@ jquery3-api
 jsch
 junit
 klocwork
+kubernetes
 ldap
 lockable-resources
 mailer
@@ -134,6 +137,7 @@ token-macro
 trilead-api
 valgrind
 variant
+vsphere-cloud
 windows-slaves
 workflow-aggregator
 workflow-api

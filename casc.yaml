@@ -1,4 +1,16 @@
 jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
   remotingSecurity:
     enabled: true
   markupFormatter: "plainText"
@@ -9,6 +21,8 @@ security:
     authenticators:
     - global:
         strategy: triggeringUsersAuthorizationStrategy
+  globaljobdslsecurityconfiguration:
+    useScriptSecurity: false
 unclassified:
   email-ext:
     adminRequiredForTemplateTesting: false
@@ -31,6 +45,9 @@ unclassified:
     maxAttachmentSizeMb: -1
     precedenceBulk: false
     watchingEnabled: false
+  location:
+    adminAddress: "me@foobar.com"
+    url: "http://localhost:8080/"
   metricsAccessKey:
     accessKeys:
     - canHealthCheck: true
@@ -40,3 +57,42 @@ unclassified:
       description: "metrics"
       key: "publicHealthCheckAccessKey"
       origins: "*"
+
+jobs:
+  - script: >
+      job('Job_DSL_Seed') {
+        steps {
+          jobDsl {
+            removedJobAction('DELETE')
+            scriptText(
+            '''
+             [ "foss", "clf" ].each {
+               def projectName = it
+               organizationFolder(projectName) {
+                 description("This contains branch source jobs for Bitbucket project " + projectName)
+                 displayName(projectName)
+
+                 organizations {
+                     bitbucket {
+                       repoOwner(projectName)
+                       credentialsId('ROuser')
+                       traits {
+                         sourceRegexFilter {
+                           // A Java regular expression to restrict the project names.
+                           regex('.*')
+                         }
+                       }
+                     }
+                   }
+                   orphanedItemStrategy {
+                       discardOldItems {
+                           daysToKeep(10)
+                           numToKeep(10)
+                       }
+                   } 
+                 }
+             }
+             '''.stripIndent())
+          }
+        }
+      }
