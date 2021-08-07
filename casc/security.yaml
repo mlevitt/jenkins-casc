@@ -9,7 +9,13 @@ jenkins:
     globalMatrix:
       permissions:
         - "Overall/Administer:admin"
+        - "Agent/Configure:anonymous"
+        - "Agent/Connect:anonymous"
+        - "Agent/Create:anonymous"
+        - "Overall/Administer:admin"
+        - "Overall/Read:anonymous"
         - "Overall/Read:authenticated"
+        - "Overall/SystemRead:anonymous"
   remotingSecurity:
     enabled: true
 security:

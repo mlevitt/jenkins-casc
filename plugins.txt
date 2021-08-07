@@ -132,6 +132,7 @@ ssh-slaves
 ssh-steps
 stashNotifier
 structs
+swarm
 timestamper
 token-macro
 trilead-api
